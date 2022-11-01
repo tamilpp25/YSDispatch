@@ -13,24 +13,24 @@ export default async function handle(req: Request, res: Response) {
     regionInfo: RegionInfo.fromPartial({
       gateserverIp: Config.GAMESERVER.SERVER_IP,
       gateserverPort: Config.GAMESERVER.SERVER_PORT,
-      secretKey: ec2b.ec2b,
+      // secretKey: ec2b.ec2b,
     }),
-    clientSecretKey: ec2b.ec2b,
-    regionCustomConfigEncrypted: ec2b.cipher(
-      Buffer.from(
-        JSON.stringify({
-          coverSwitch: [8],
-          perf_report_config_url: new URL(
-            'config/verify',
-            'https://osasiadispatch.yuanshen.com/'
-          ),
-          perf_report_record_url: new URL(
-            'dataUpload',
-            'https://osasiadispatch.yuanshen.com/'
-          ),
-        })
-      )
-    ),
+    // clientSecretKey: ec2b.ec2b,
+    // regionCustomConfigEncrypted: ec2b.cipher(
+    //   Buffer.from(
+    //     JSON.stringify({
+    //       coverSwitch: [8],
+    //       perf_report_config_url: new URL(
+    //         'config/verify',
+    //         'https://osasiadispatch.yuanshen.com/'
+    //       ),
+    //       perf_report_record_url: new URL(
+    //         'dataUpload',
+    //         'https://osasiadispatch.yuanshen.com/'
+    //       ),
+    //     })
+    //   )
+    // ),
   });
   res.send(encryptAndSign(QueryCurrRegionHttpRsp.encode(dataObj).finish()));
 }
