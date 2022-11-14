@@ -18,13 +18,13 @@ const DEFAULT_CONFIG = {
     // Dispatch
     DISPATCH: [{
         DISPATCH_NAME: "YSDispatch",
-        DISPATCH_URL: "https://osasiadispatch.yuanshen.com/query_cur_region"
+        DISPATCH_URL: "https://localhost/query_cur_region"
     }],
 
     // GameServer
     GAMESERVER: {
         SERVER_IP: "127.0.0.1",
-        SERVER_PORT: 20071
+        SERVER_PORT: 22102
     },
     AUTO_ACCOUNT: false
 }
