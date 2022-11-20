@@ -11,5 +11,5 @@ const c = new Logger('YSDispatch');
 c.log('Starting YSDispatch...');
 
 HttpServer.getInstance().start();
-c.debug('Key Id: 5')
+c.log('Key Id: 5')
 Interface.start()
