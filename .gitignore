@@ -129,4 +129,3 @@ dist
 # YSDispatch
 *.proto
 config.json
-alias.json
