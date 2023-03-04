@@ -4,6 +4,7 @@ import fs from 'fs';
 import { resolve } from 'path';
 import Config from '../utils/Config';
 import Logger, { VerboseLevel } from '../utils/Logger';
+import { loadKeys } from '../crypto';
 const c = new Logger("HTTP", "cyan");
 
 function r(...args: string[]) {

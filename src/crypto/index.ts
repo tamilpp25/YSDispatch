@@ -7,9 +7,15 @@ function r(...args: string[]) {
   return readFileSync(resolve(__dirname, ...args)).toString();
 }
 
-export const publicKey_OS = r('../data/keys/OS_Public.pem');
-export const privateKey_OS = r('../data/keys/OS_Private.pem');
-export const signingKey = r('../data/keys/SigningKey.pem');
+export function loadKeys() {
+  const keys: Map<string, string> = new Map();
+  keys.set("2", r('../data/keys/MHYPrivCN.pem'));
+  keys.set("3", r('../data/keys/MHYPrivOS.pem'));
+  keys.set("4", r('../data/keys/MHYPrivCN1.pem'));
+  keys.set("5", r('../data/keys/MHYPrivOS1.pem'));
+  keys.set("Sign", r('../data/keys/SigningKey.pem'));
+  return keys;
+}
 
 export const DefaultEc2bPath = path.join(__dirname, "ec2b.bin");
 export const DefaultEc2bKeyPath = path.join(__dirname, "ec2b.key");
@@ -42,55 +48,63 @@ export function xorBuffer(key: Buffer, buffer: Buffer) {
   }
 }
 
-export function encryptAndSign(data: Uint8Array): {content: string, sign:string} {
-    let content = rsaEncrypt(publicKey_OS,Buffer.from(data)).toString('base64');
-    let signed = rsaSign(signingKey,Buffer.from(data)).toString('base64');
+export class RSAUtils {
+  public static keys: Map<string, string>;
+
+  static initKeys(){
+    RSAUtils.keys = loadKeys()
+  }
+
+  static encryptAndSign(data: Uint8Array, key_id: string): { content: string, sign: string } {
+    let content = RSAUtils.rsaEncrypt(RSAUtils.keys.get(key_id)!, Buffer.from(data)).toString('base64');
+    let signed = RSAUtils.rsaSign(RSAUtils.keys.get("Sign")!, Buffer.from(data)).toString('base64');
 
     return {
-        content: content,
-        sign: signed
+      content: content,
+      sign: signed
     }
-}
-
-export const rsaEncrypt = (publicKey: Buffer | string, plaintext: Buffer): Buffer => {
-  const chunkSize = 256 - 11
-  const chunkCount = Math.ceil(plaintext.length / chunkSize)
-  const chunks: Buffer[] = []
-
-  for (let i = 0; i < chunkCount; i++) {
-    const chunk = plaintext.subarray(i * chunkSize, (i + 1) * chunkSize)
-    chunks.push(publicEncrypt({ key: publicKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, chunk))
   }
 
-  return Buffer.concat(chunks)
-}
+  static rsaEncrypt = (publicKey: Buffer | string, plaintext: Buffer): Buffer => {
+    const chunkSize = 256 - 11
+    const chunkCount = Math.ceil(plaintext.length / chunkSize)
+    const chunks: Buffer[] = []
 
-export const rsaDecrypt = (privateKey: Buffer | string, ciphertext: Buffer): Buffer => {
-  const chunkSize = 256
-  const chunkCount = Math.ceil(ciphertext.length / chunkSize)
-  const chunks: Buffer[] = []
+    for (let i = 0; i < chunkCount; i++) {
+      const chunk = plaintext.subarray(i * chunkSize, (i + 1) * chunkSize)
+      chunks.push(publicEncrypt({ key: publicKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, chunk))
+    }
 
-  for (let i = 0; i < chunkCount; i++) {
-    const chunk = ciphertext.subarray(i * chunkSize, (i + 1) * chunkSize)
-    chunks.push(privateDecrypt({ key: privateKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, chunk))
+    return Buffer.concat(chunks)
   }
 
-  return Buffer.concat(chunks)
-}
+  static rsaDecrypt = (privateKey: Buffer | string, ciphertext: Buffer): Buffer => {
+    const chunkSize = 256
+    const chunkCount = Math.ceil(ciphertext.length / chunkSize)
+    const chunks: Buffer[] = []
 
-export const rsaSign = (privateKey: Buffer | string, data: Buffer): Buffer => {
-  const signer = createSign('RSA-SHA256')
-  signer.update(data)
-  return signer.sign({ key: privateKey, padding: CryptoConsts.RSA_PKCS1_PADDING })
-}
+    for (let i = 0; i < chunkCount; i++) {
+      const chunk = ciphertext.subarray(i * chunkSize, (i + 1) * chunkSize)
+      chunks.push(privateDecrypt({ key: privateKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, chunk))
+    }
 
-export const rsaVerify = (publicKey: Buffer | string, data: Buffer, signature: Buffer): boolean => {
-  if (
-    publicKey == null || data == null || signature == null ||
-    publicKey.length <= 0 || data.length <= 0 || signature.length <= 0
-  ) return false
+    return Buffer.concat(chunks)
+  }
 
-  const verifier = createVerify('RSA-SHA256')
-  verifier.update(data)
-  return verifier.verify({ key: publicKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, signature)
+  static rsaSign = (privateKey: Buffer | string, data: Buffer): Buffer => {
+    const signer = createSign('RSA-SHA256')
+    signer.update(data)
+    return signer.sign({ key: privateKey, padding: CryptoConsts.RSA_PKCS1_PADDING })
+  }
+
+  static rsaVerify = (publicKey: Buffer | string, data: Buffer, signature: Buffer): boolean => {
+    if (
+      publicKey == null || data == null || signature == null ||
+      publicKey.length <= 0 || data.length <= 0 || signature.length <= 0
+    ) return false
+
+    const verifier = createVerify('RSA-SHA256')
+    verifier.update(data)
+    return verifier.verify({ key: publicKey, padding: CryptoConsts.RSA_PKCS1_PADDING }, signature)
+  }
 }

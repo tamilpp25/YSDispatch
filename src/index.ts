@@ -6,10 +6,11 @@
 import Logger from './utils/Logger';
 import HttpServer from './http/HttpServer';
 import Interface from './commands/Interface';
+import { RSAUtils } from './crypto';
 
 const c = new Logger('YSDispatch');
 c.log('Starting YSDispatch...');
 
+RSAUtils.initKeys();
 HttpServer.getInstance().start();
-c.log('Key Id: 5')
 Interface.start()

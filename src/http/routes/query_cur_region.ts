@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Config from '../../utils/Config';
-import { QueryCurrRegionHttpRsp, RegionInfo } from '../../data/dispatch';
-import { Ec2bKey, encryptAndSign } from '../../crypto';
+import { QueryCurrRegionHttpRsp, RegionInfo, StopServerInfo } from '../../data/dispatch';
+import { Ec2bKey, RSAUtils } from '../../crypto';
 import Logger from '../../utils/Logger';
 
 const c = new Logger('Dispatch', 'blue');
@@ -9,6 +9,14 @@ const c = new Logger('Dispatch', 'blue');
 const ec2b = new Ec2bKey();
 
 export default async function handle(req: Request, res: Response) {
+  const key = req.query.key_id
+
+  if(!key){
+    return; // no legacy support
+  }
+
+  c.debug(`Client Key: ${key}`)
+
   const dataObj = QueryCurrRegionHttpRsp.fromPartial({
     regionInfo: RegionInfo.fromPartial({
       gateserverIp: Config.GAMESERVER.SERVER_IP,
@@ -32,5 +40,6 @@ export default async function handle(req: Request, res: Response) {
       )
     ),
   });
-  res.send(encryptAndSign(QueryCurrRegionHttpRsp.encode(dataObj).finish()));
+
+  res.send(RSAUtils.encryptAndSign(QueryCurrRegionHttpRsp.encode(dataObj).finish(), key.toString()))
 }
