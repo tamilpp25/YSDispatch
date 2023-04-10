@@ -12,11 +12,11 @@ const DEFAULT_CONFIG = {
     // HTTP
     HTTP: {
         HTTP_HOST: "0.0.0.0",
-        HTTP_PORT: 449
+        HTTP_PORT: 3000
     },
     HTTPS: {
         HTTP_HOST: "0.0.0.0",
-        HTTPS_PORT: 448
+        HTTPS_PORT: 443
     },
 
     // Dispatch
@@ -83,6 +83,10 @@ export default class Config {
         HTTP_HOST: string,
         HTTP_PORT: number
     } = Config.config.HTTP;
+    public static HTTPS: {
+        HTTPS_HOST: string,
+        HTTPS_PORT: number
+    } = Config.config.HTTPS;
     public static DISPATCH: {
         DISPATCH_NAME: string;
         DISPATCH_URL: string;

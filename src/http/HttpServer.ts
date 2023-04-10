@@ -4,7 +4,6 @@ import fs from 'fs';
 import { resolve } from 'path';
 import Config from '../utils/Config';
 import Logger, { VerboseLevel } from '../utils/Logger';
-import { loadKeys } from '../crypto';
 const c = new Logger("HTTP", "cyan");
 
 function r(...args: string[]) {
@@ -40,7 +39,7 @@ export default class HttpServer {
 
     public start(): void {
         https.createServer(HTTPS_CONFIG, this.server).listen(Config.config.HTTPS.HTTPS_PORT, Config.config.HTTPS.HTTP_HOST, () => {
-            c.log(`Listening on HTTPS ${Config.config.HTTPS.HTTP_HOST}:${Config.config.HTTPS.HTTPS_PORT}`);
+            c.log(`Listening on HTTPS ${Config.config.HTTPS.HTTPS_HOST}:${Config.config.HTTPS.HTTPS_PORT}`);
         });
         this.server.listen(Config.config.HTTP.HTTP_PORT, Config.config.HTTP.HTTP_HOST, () => {
             c.log(`Listening on HTTP ${Config.config.HTTP.HTTP_HOST}:${Config.config.HTTP.HTTP_PORT}`);
