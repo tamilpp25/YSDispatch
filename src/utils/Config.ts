@@ -12,7 +12,11 @@ const DEFAULT_CONFIG = {
     // HTTP
     HTTP: {
         HTTP_HOST: "0.0.0.0",
-        HTTP_PORT: 3000
+        HTTP_PORT: 449
+    },
+    HTTPS: {
+        HTTP_HOST: "0.0.0.0",
+        HTTPS_PORT: 443
     },
 
     // Dispatch
