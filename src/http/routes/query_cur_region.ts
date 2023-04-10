@@ -12,6 +12,7 @@ export default async function handle(req: Request, res: Response) {
   const key = req.query.key_id
 
   if(!key){
+    res.send('CAESGE5vdCBGb3VuZCB2ZXJzaW9uIGNvbmZpZxoA')
     return; // no legacy support
   }
 

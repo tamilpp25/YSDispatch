@@ -1,20 +1,9 @@
 import express from 'express';
-import https from 'https';
 import fs from 'fs';
 import { resolve } from 'path';
 import Config from '../utils/Config';
 import Logger, { VerboseLevel } from '../utils/Logger';
-import { loadKeys } from '../crypto';
 const c = new Logger("HTTP", "cyan");
-
-function r(...args: string[]) {
-    return fs.readFileSync(resolve(__dirname, ...args)).toString();
-}
-
-const HTTPS_CONFIG = {
-    key: r('./cert/cert.key'),
-    cert: r('./cert/cert.crt'),
-}
 
 export default class HttpServer {
     private readonly server;
@@ -39,7 +28,6 @@ export default class HttpServer {
     }
 
     public start(): void {
-        https.createServer(HTTPS_CONFIG, this.server).listen(Config.HTTP.HTTP_PORT, Config.HTTP.HTTP_PORT);
         this.server.listen(Config.HTTP.HTTP_PORT, Config.HTTP.HTTP_HOST, () => {
             c.log(`Listening on ${Config.HTTP.HTTP_HOST}:${Config.HTTP.HTTP_PORT}`);
         });
