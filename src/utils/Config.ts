@@ -15,7 +15,7 @@ const DEFAULT_CONFIG = {
         HTTP_PORT: 3000
     },
     HTTPS: {
-        HTTP_HOST: "0.0.0.0",
+        HTTPS_HOST: "0.0.0.0",
         HTTPS_PORT: 443
     },
 
