@@ -3,6 +3,7 @@ import fs from 'fs';
 import { resolve } from 'path';
 import Config from '../utils/Config';
 import Logger, { VerboseLevel } from '../utils/Logger';
+import query_cur_handle from './routes/query_cur_region';
 const c = new Logger("HTTP", "cyan");
 
 export default class HttpServer {
@@ -13,6 +14,7 @@ export default class HttpServer {
         this.server = express();
         this.server.use(express.json({limit: '50mb'}));
         this.server.use('/asb', express.static(resolve(__dirname, './routes/asb')));
+        this.server.route('/query_cur_region/:region').all(query_cur_handle)
         this.server.route('/*').all((req, res) => {
             if (Logger.VERBOSE_LEVEL > VerboseLevel.WARNS) c.log(`${req.method} ${req.url}`);
             import(`./routes${req.url.split('?')[0]}`).then(async r => {

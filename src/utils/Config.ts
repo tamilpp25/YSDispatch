@@ -17,15 +17,13 @@ const DEFAULT_CONFIG = {
 
     // Dispatch
     DISPATCH: [{
-        DISPATCH_NAME: "YSDispatch",
-        DISPATCH_URL: "https://localhost/query_cur_region"
+        DISPATCH_NAME: "global",
+        DISPATCH_TITLE: "YSDispatch - Global",
+        DISPATCH_BASE_URL: "https://localhost/",
+        GAMESERVER_IP: "127.0.0.1",
+        GAMESERVER_PORT: 22102
     }],
 
-    // GameServer
-    GAMESERVER: {
-        SERVER_IP: "127.0.0.1",
-        SERVER_PORT: 22102
-    },
     AUTO_ACCOUNT: false
 }
 
@@ -81,12 +79,11 @@ export default class Config {
     } = Config.config.HTTP;
     public static DISPATCH: {
         DISPATCH_NAME: string;
-        DISPATCH_URL: string;
+        DISPATCH_TITLE: string;
+        DISPATCH_BASE_URL: string;
+        GAMESERVER_IP: string;
+        GAMESERVER_PORT: number;
     }[] = Config.config.DISPATCH;
-    public static GAMESERVER: {
-        SERVER_IP: string;
-        SERVER_PORT: number;
-    } = Config.config.GAMESERVER;
     public static AUTO_ACCOUNT: boolean = Config.config.AUTO_ACCOUNT;
 
     private constructor() { }

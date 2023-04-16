@@ -27,9 +27,9 @@ export default function handle(req: Request, res: Response) {
 
     Config.DISPATCH.forEach(item => {
         dataObj.regionList.push(RegionSimpleInfo.fromPartial({
-            title: item.DISPATCH_NAME,
-            name: "os_asia",
-            dispatchUrl: item.DISPATCH_URL,
+            title: item.DISPATCH_TITLE,
+            name: item.DISPATCH_NAME,
+            dispatchUrl: new URL(`query_cur_region/${item.DISPATCH_NAME}`, item.DISPATCH_BASE_URL).toString(),
             type: "DEV_PUBLIC",
         }));
     });
