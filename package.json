@@ -15,7 +15,7 @@
   "dependencies": {
     "colorts": "^0.1.63",
     "express": "^4.18.2",
-    "mongodb": "^4.11.0",
+    "mongodb": "^4.17.0",
     "protobufjs": "^7.2.4"
   }
 }
