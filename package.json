@@ -16,6 +16,6 @@
     "colorts": "^0.1.63",
     "express": "^4.18.2",
     "mongodb": "^4.11.0",
-    "protobufjs": "^7.1.2"
+    "protobufjs": "^7.2.4"
   }
 }
